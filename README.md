@@ -16,4 +16,11 @@ Installation
 Starten und Stoppen des API-Servers
 -----------------------------------
 
+Entwicklung:
+
 uvicorn app.main:app --reload
+
+Produktion:
+
+gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornH11Worker&
+

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -11,6 +11,15 @@ class Item(BaseModel):
     price: float
     is_offer: Optional[bool] = None
 
+class Page(BaseModel):
+    title: str
+    description: str
+    text: str
+
+class Folder(BaseModel):
+    title: str
+    description: str
+    pages: List[Page]
 
 @app.get("/")
 def read_root():
@@ -25,3 +34,8 @@ def read_item(item_id: int, q: Optional[str] = None):
 @app.put("/items/{item_id}")
 def update_item(item_id: int, item: Item):
     return {"item_name": item.name, "item_id": item_id}
+
+@app.post("/printcontent")
+def print_folder(content: Folder):
+    print(content.title)
+    return {"Hello": "World"}

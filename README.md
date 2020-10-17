@@ -1,7 +1,32 @@
-API's der educorvi GmbH
-=======================
+ELLA (Ella, elle l'a, Sängerin: France Gall, 1987)
+==================================================
+deutsche Übersetzung: "Ella hat es."
 
-Dieses Projekt umfasst die API-Schnittstellen für die Software-Projekte der educorvi GmbH & Co. KG. Das Projekt basiert auf FastApi und uvicorn.
+Mit diesem Projekt wird ein OPEN-API-Contract zwischen einer Frontend-Applikation (z.B.: einer Progressive Webapp, einer App, einer
+Website oder einer Unternehmens-Software) und den dafür benötigten Backend-Systemen geschlossen. Als Backends kommen in Frage:
+
+Frontend-Applikationen (wir sprechen von der **ella_app**) können sein:
+
+- eine Progressive Webapp (PWA)
+- eine Website oder eine in die Seite eingebette Applikation
+- eine Unternehmens-Software auf der Kundenseite
+
+Backend-Applikationen (wir sprechen von **ella_backends**) können sein:
+
+- ein Datenbank-Management-System
+- ein Content-Management-System
+- die Unternehmenssoftware des Anbieters
+- ein CRM-System
+
+ELLA ist die Komponente zwischen den Welten. Die Aufgabe von ELLA besteht darin, die verschiedenen internen Schnittstellen zu
+kapseln und nach aussen OPEN-API's anzubieten wie die folgende Abbildung verdeutlichen soll.
+
+
+Funktionsweise
+--------------
+
+
+
 
 Installation
 ------------

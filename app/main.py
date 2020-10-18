@@ -7,7 +7,11 @@ from .models import EllaContact, ContactResponse
 from .services import EllaServices
 from fastapi import FastAPI
 
-app = FastAPI()
+app = FastAPI(
+    title="ELLA",
+    description="OpenApi für 'Fire and Forget' Applikationen",
+    version="0.9",
+)
 services = EllaServices()
 
 @app.get("/")

@@ -1,5 +1,7 @@
-ELLA (Ella, elle l'a, Sängerin: France Gall, 1987)
-==================================================
+ELLA - OpenApi für Fire and Forget Anwendungen
+==============================================
+Ella, elle l'a, Sängerin: France Gall, 1987
+-------------------------------------------
 deutsche Übersetzung: "Ella hat es."
 
 Mit diesem Projekt wird ein OPEN-API-Contract zwischen einer Frontend-Applikation (z.B.: einer Progressive Webapp, einer App, einer

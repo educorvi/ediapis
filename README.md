@@ -47,13 +47,42 @@ Was ELLA nicht ist
 ------------------
 
 - ELLA ist kein technischer oder fachlicher Framework
+- ELLA selbst persistiert keine Daten, wenn Daten gespeichert werden müssen erfolgt das in einem **ella_backend**
 - ELLA erhebt keinen Anspruch auf Vollständigkeit und Richtigkeit im Hinblick auf den Funktionsumfang oder die angewendeten
   Programmiertechniken - es gibt so viele bessere Programmierer...
 
-
-
 Funktionsweise
 --------------
+
+### Fire and Forget Applikationen
+
+Mit ELLA werden leichtgewichtige "Fire and Forget" Applikationen mit OpenApi's versorgt. Damit sollen Front-End-Entwickler
+in die Lage versetzt werden, standardisiert und schnell zugleich eine kleine App oder Progressive Webapp (PWA) zu entwickeln,
+die auf den folgenden Prinzipien beruht:
+
+- Eine **Welcome** - Seite mit Richtext (z.B. HTML, Markdown, Restructured Text...). Mit der Welcome-Page wird eine Liste 
+  von **Services** ausgeliefert, die dem Benutzer beispielsweise über ein Hamburger Menü angeboten werden können.
+- **Services** können sein:
+    - eine Seite (type=page) mit weiteren Informationen
+    - ein formularbasierter Service (type=service)
+    - eine Gruppe von Services (Seiten oder Formulare)
+- **Aktions** werden durch Buttons repräsentiert. Sie dienen der Annahme, Weiterleitung oder Verarbeitung der Daten über die
+  formularbasierten Services. Da ELLA selbst keine Daten speichert handelt es sich um "Fire and Forget" Aktionen, wie z.B.
+    - das Senden bzw. die Weiterleitung an einen Backend per Schnittstelle oder E-Mail
+    - das Drucken von Daten in ein PDF-Formular (auch in Kombination mit dem Senden)
+    - das Teilen von Informationen (z.B. auf einer Website oder in sozialen Netzwerken)
+    - die Überprüfung bzw. Validierung von Daten (z.B. Validierung einer Checkliste oder eines Quizzes)
+
+Die folgende Abbildung zeigt den Aufbau einer "Fire and Forget" Applikation auf Basis des ELLA OpenApi-Kontrakts
+
+![Aufbau einer Fire and Forget Applikation](./doc/images/ella_template.jpg "Aufbau einer Fire an Forget Applikation")
+
+
+
+ 
+
+- Ein Impressum
+- 
 
 
 

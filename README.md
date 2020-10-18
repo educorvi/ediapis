@@ -56,6 +56,8 @@ Funktionsweise
 
 ### Fire and Forget Applikationen
 
+#### Grundsätzliches Verständnis für die Entwicklung mit ELLA
+
 Mit ELLA werden leichtgewichtige "Fire and Forget" Applikationen mit OpenApi's versorgt. Damit sollen Front-End-Entwickler
 in die Lage versetzt werden, standardisiert und schnell zugleich eine kleine App oder Progressive Webapp (PWA) zu entwickeln,
 die auf den folgenden Prinzipien beruht:
@@ -77,17 +79,110 @@ Die folgende Abbildung zeigt den Aufbau einer "Fire and Forget" Applikation auf 
 
 ![Aufbau einer Fire and Forget Applikation](./doc/images/ella_template.jpg "Aufbau einer Fire an Forget Applikation")
 
+#### Aufbau von ELLA auf dem Filesystem
+
+    --- /app #Verzeichnis der ELLA Applikation für den Micro-Framework FastApi
+          |
+          -- main.py     #Dieses Python-Modul bildet den Kern der Applikation und wird beim Serverstart aufgerufen.
+          |              #Hier werden alle von ELLA nach aussen angebotenen RESTful-Webservices gespeichert. 
+          |
+          -- models.py   #In diesem Modul befinden sich alle in der Applikation verwendeten Datenmodelle.
+          |              #FastAPI generiert aus den Datenmodellen JSON-Schemas zur Beschreibung und Validierung.
+          |
+          -- services.py #In diesem Modul werden alle Funktionen beschrieben, um die Apis mit Daten und
+                         #und Informationen zu versorgen. Hier werden die Schnittstellen zu den ella_backends definiert.
+          |
+          -- examples.py #Daten für die dokumentierten ELLA Beispiele.
+
+#### ELLA-Demosystem          
+
 ### OpenApi-Kontrakt für Web-Formulare
 
 Mit ELLA ist ein Python-Entwickler sehr schnell in der Lage, einen OpenAPI-Kontrakt für den Empfang von Daten aus einem
-Web-Formular zu entwickeln.
+Web-Formular zu entwickeln. Folgende Schritte sind zu erledigen:
 
- 
+#### Datenmodell zur Annahme und Validierung der Daten, die über das Web-Formular geschickt werden
 
-- Ein Impressum
-- 
+Das Datenmodell muss exakt dem entsprechen, was das Webformular sendet, oder mit anderen Worten: **Dem Web-Formular wird
+angezeigt welche Daten die OpenApi entgegennimmt.** Aus dem Modell generiert FastApi ein JSON-Schema zur Validierung der
+Eingangsdaten.
 
+models.py
 
+    ...
+    from pydantic import BaseModel
+    ...
+
+    class EllaContact(BaseModel):
+        """
+        Beispiel eines Kontakt-Formulars einer ella_app.
+        """
+        name : Text
+        vorname : Text
+        subject : Text
+        message : Text
+        email : Text
+        telefon : Optional[Text]
+        mobil : Optional[Text]
+
+#### Datenmodell für die Antwort von ELLA an das Web-Formular
+
+models.py
+
+    ...
+    from pydantic import BaseModel
+    ...
+
+    class ContactResponse(BaseModel):
+        """
+        Antwort an die ella_app nach Versand der Kontakt-Nachricht.
+        - "success" Bool-Werte true oder false
+        - "message" Exception-Message bei False, Success-Message bei  true
+        """
+        success : bool
+        message : str
+
+#### Service zur Annahme der Daten über die ELLA OpenApi
+
+Es wird ein RESTful Webservice angeboten, der über die HTTP-Post Methode aufgerufen wird. Das response_model beschreibt
+dem API Konsumenten (hier: dem Web-Formular) wie die Antwort von ELLA im Falle des Erfolges und im Falle des Misserfolges
+aussieht.
+
+main.py
+
+    ...
+    from .models import EllaContact, ContactResponse
+    ...
+
+    @app.post("/{ella_id}/contact/send", response_model=ContactResponse)
+    def get_data(ella_id:str, data:EllaContact):
+        """Die ella Applikation sendet die Daten passend zum EllaContact Formular. Die Daten werden
+            angenommen und weitergeleitet.
+        """
+         return services.send_contact_data(ella_id, data)
+
+#### Service zum Versand bzw. zur Weiterleitung der Daten
+
+Die Weiterleitung der Daten erfolgt in diesem Fall intern über den E-Mail-Server.
+
+services.py
+
+    def send_contact_data(self, ella_id, data):
+        if ella_id == 'ella_example_simple':
+            msg = "Nachricht von: %s %s\r\n" % (data.vorname, data.name)
+            msg += data.message
+            msg['Subject'] = f'The contents of {textfile}'
+            msg['From'] = data.email
+            msg['To'] = "your.email@domain.de"
+            # Senden der Nachricht über einen SMTP-Server
+            try:
+                s = smtplib.SMTP('localhost')
+                s.send_message(msg)
+                s.quit()
+                return  {'success':True, 'message': 'Die Nachricht wurde erfolgreich gesendet'}
+            except:
+                return  {'success':False, 'message': sys.exc_info()[0]}
+        raise HTTPExeption(status_code=404, detail="ella_service not found or not allowed in this context")
 
 
 Installation

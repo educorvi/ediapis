@@ -95,3 +95,24 @@ class Welcome(BaseModel):
     impressum : Text
     privacy : Text
     contact : Union[ServiceDescription, Text]
+
+class EllaContact(BaseModel):
+    """
+    Beispiel eines Kontakt-Formulars einer ella_app.
+    """
+    name : Text
+    vorname : Text
+    subject : Text
+    message : Text
+    email : Text
+    telefon : Optional[Text]
+    mobil : Optional[Text]
+
+class ContactResponse(BaseModel):
+    """
+    Antwort an die ella_app nach Versand der Kontakt-Nachricht.
+    - "success" Bool-Werte true oder false
+    - "message" Exception-Message bei False, Success-Message bei  true
+    """
+    success : bool
+    message : str

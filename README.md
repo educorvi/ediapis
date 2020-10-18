@@ -73,11 +73,14 @@ die auf den folgenden Prinzipien beruht:
     - das Teilen von Informationen (z.B. auf einer Website oder in sozialen Netzwerken)
     - die Überprüfung bzw. Validierung von Daten (z.B. Validierung einer Checkliste oder eines Quizzes)
 
-Die folgende Abbildung zeigt den Aufbau einer "Fire and Forget" Applikation auf Basis des ELLA OpenApi-Kontrakts
+Die folgende Abbildung zeigt den Aufbau einer "Fire and Forget" Applikation auf Basis des ELLA OpenApi-Kontrakts.
 
 ![Aufbau einer Fire and Forget Applikation](./doc/images/ella_template.jpg "Aufbau einer Fire an Forget Applikation")
 
+### OpenApi-Kontrakt für Web-Formulare
 
+Mit ELLA ist ein Python-Entwickler sehr schnell in der Lage, einen OpenAPI-Kontrakt für den Empfang von Daten aus einem
+Web-Formular zu entwickeln.
 
  
 

@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# # Copyright (c) 2016-2020 educorvi GmbH & Co. KG
+# # lars.walther@educorvi.de
+
 import os.path
 import tempfile
 from datetime import date

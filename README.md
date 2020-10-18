@@ -51,6 +51,14 @@ Was ELLA nicht ist
 - ELLA erhebt keinen Anspruch auf Vollständigkeit und Richtigkeit im Hinblick auf den Funktionsumfang oder die angewendeten
   Programmiertechniken - es gibt so viele bessere Programmierer...
 
+ELLA Demo-System
+----------------
+
+Für die in diesem Dokument dokumentierte ELLA Applikation für den Micro-Framework FastAPI steht das folgende Demo-System
+für weitere Informationen und Tests zur Verfügung:
+
+https://ella.uv-kooperation.de/docs
+
 Funktionsweise
 --------------
 
@@ -93,8 +101,6 @@ Die folgende Abbildung zeigt den Aufbau einer "Fire and Forget" Applikation auf 
                          #und Informationen zu versorgen. Hier werden die Schnittstellen zu den ella_backends definiert.
           |
           -- examples.py #Daten für die dokumentierten ELLA Beispiele.
-
-#### ELLA-Demosystem          
 
 ### OpenApi-Kontrakt für Web-Formulare
 
@@ -188,21 +194,94 @@ services.py
 Installation
 ------------
 
-- git clone https://github.com/educorvi/ediapis.git
-- cd ediapis
-- python3 -m venv env
-- source ./env/bin/activate
-- pip install -r requirements.txt
-- pip install -r dev-requirements.txt
+### Python-Installation (Ubuntu)
 
-Starten und Stoppen des API-Servers
------------------------------------
+    ~/$ sudo apt-get install build-essential python-dev libjpeg-dev libxslt-dev supervisor
+    ~/$ sudo apt-get install libpython3-dev
+    ~/$ sudo apt-get install python3-pip
 
-Entwicklung:
+### FastApi-Installation mit ELLA Appikation
 
-uvicorn app.main:app --reload
+    ~/$ git clone https://github.com/educorvi/ella.git
+    ~/$ cd ella
+    ~/ella$ python3 -m venv env
+    ~/ella$ source ./env/bin/activate
+    ~/ella$ pip install -r requirements.txt
+    ~/ella$ pip install -r dev-requirements.txt
 
-Produktion:
+### Starten und Stoppen des API-Servers im Entwicklungsmodus
 
-gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornH11Worker&
+    ~/ella$ uvicorn app.main:app --reload
+    [CTRL-C]
 
+Deployment für den Produktionsbetrieb
+-------------------------------------
+
+Für den Produktionsbetrieb wird eine Supervisor-Konfiguration mit einem vorgeschalteten NGINX-Server
+empfohlen. Mit den folgenden Konfigurationsdateien kann eine solche Installation realisiert werden.
+
+### Supervisor Konfiguration 
+
+/etc/supervisor/conf.d/ella.conf
+
+    [fcgi-program:uvicorn]
+    socket=tcp://127.0.0.1:8000
+    command=/home/{your_home}/ella/env/bin/uvicorn --fd 0 --app-dir /home/{your_home}/ella app.main:app
+    numprocs=4
+    process_name=uvicorn-%(process_num)d
+    stdout_logfile=/dev/stdout
+    stdout_logfile_maxbytes=0
+
+### NGINX Konfiguration
+
+/etc/nginx/sites-available/ella.conf
+
+	upstream ella {
+    	server 127.0.0.1:8000;
+	}
+
+	server {
+    	server_name ella.uv-kooperation.de;
+    	client_max_body_size 4G;
+    	access_log /var/log/nginx/ella.de.access.log;
+    	error_log /var/log/nginx/ella.de.error.log;
+
+   		location / {
+      		proxy_set_header Host $http_host;
+      		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      		proxy_set_header X-Forwarded-Proto $scheme;
+      		proxy_redirect off;
+      		proxy_buffering off;
+     		 proxy_pass http://ella;
+    	}
+
+
+    	listen 80;
+
+	}
+
+Ansprechpartner / Maintainer
+----------------------------
+
+Lars Walther (lars.walther@educorvi.de)
+
+Lizenz
+------
+
+FastAPI ist unter den Bedingungen der MIT lizensiert.
+Urheber der Software ist Sebastian Ramirez 
+E-Mail: tiangolo@gmail.com
+WWW: https://tiangolo.com
+
+Für ELLA gelten ebenfalls die Bedingungen der MIT-Lizenz
+
+Copyright (c) 2016-2020 educorvi GmbH & Co. KG
+lars.walther@educorvi.de
+
+Weitere Quellen
+---------------
+
+- https://fastapi.tiangolo.com/
+- https://dev.to/tiangolo/build-a-web-api-from-scratch-with-fastapi-the-workshop-2ehe
+- https://github.com/tiangolo/blog-posts/tree/master/pyconby-web-api-from-scratch-with-fastapi/apiapp
+- https://www.uvicorn.org/deployment/

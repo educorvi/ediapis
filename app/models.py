@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+# # Copyright (c) 2016-2020 educorvi GmbH & Co. KG
+# # lars.walther@educorvi.de
+
 from typing import Optional, List, Dict, Text, Union
 from pydantic import BaseModel
 

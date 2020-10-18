@@ -41,14 +41,14 @@ kapseln und nach aussen OpenApi-Kontrakte anzubieten wie die folgende Abbildung 
 - ELLA ist ein dokumentiertes "HowTo" für Einsteiger in die Entwicklung von python-basierten Web-Applikationen
 - ELLA bietet funktionale Beispiel-Apis für die Entwickler von Apps und Progressive Webapps
 - ELLA ist Programmcode und Dokumentation auf dem Rücken eines kleinen Giganten - dem Python-Microframework FastAPI 
-  (https://fastapi.tiangolo.com/) - vielen Dank @tiangolo Sebastian Ramirez (https://github.com/tiangolo)
+  (https://fastapi.tiangolo.com/) - vielen Dank #@tiangolo - Sebastian Ramirez (https://github.com/tiangolo)
 
 Was ELLA nicht ist
 ------------------
 
 - ELLA ist kein technischer oder fachlicher Framework
 - ELLA erhebt keinen Anspruch auf Vollständigkeit und Richtigkeit im Hinblick auf den Funktionsumfang oder die angewendeten
-  Programmiertechniken - es gibt so viele bessere Programmierer als mich.
+  Programmiertechniken - es gibt so viele bessere Programmierer...
 
 
 

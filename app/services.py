@@ -29,11 +29,10 @@ class EllaServices:
             allowed.append(i.name)
         if ella_service not in allowed:
             raise HTTPExeption(status_code=404, detail="ella_service not found or not allowed in this context")
-        if ella_service.startswith('ella_simple'):
-            if ella_service in example_services:
-                return example_services[ella_service]
-            else:
-                raise HTTPExeption(status_code=404, detail="ella_service not found")
+        if ella_service in example_services:
+            return example_services[ella_service]
+        else:
+            raise HTTPExeption(status_code=404, detail="ella_service not found")
 
     def send_contact_data(self, ella_id, data):
         if ella_id == 'ella_example_simple':

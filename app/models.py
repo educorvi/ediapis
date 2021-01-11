@@ -64,6 +64,7 @@ class ServiceDescription(BaseModel):
         * "group" = Es handelt sich um eine Gruppe von Services. Die Services stehen dann in "services"
     - "text" = optional (bei type=page): <HTML> Richtext der Seite
     - "form" = optional (bei type=form): JSON-Schema der Form
+    - "ui" = optional (bei type=form): UI-Schema der Form
     - "services" = optional (bei type=group): Liste mit weiteren Servicebeschreibungen
     - "formactions" = optional: Liste mit Form Actions (Buttons)
     """
@@ -73,6 +74,7 @@ class ServiceDescription(BaseModel):
     type: str #page, service, group
     text : Optional[Text]
     form : Optional[FormDescription]
+    ui : Optional[dict]
     services : Optional[List[str]]
     formactions : Optional[List[ServiceButton]]
 

@@ -2,6 +2,7 @@
 # # Copyright (c) 2016-2020 educorvi GmbH & Co. KG
 # # lars.walther@educorvi.de
 
+import requests
 from .models import Welcome, ServiceDescription, ServiceButton, FormDescription
 
 songtext = u"""\
@@ -54,6 +55,21 @@ formfields = {u'vorname':{u'description':u'Dein Vorname', u'type':u'string'},
 
 reqfields = ['name', 'age', 'geschmack']
 
+def get_five():
+    url = "https://new-etem-praev.bg-kooperation.de/anwendungen/5-sicherheitsregeln/elektrohandwerk/handwerk_test/schema-view"
+    fiverules = requests.get(url, headers={'Accept': 'application/json'})
+    data = fiverules.json()
+    retdict = dict()
+    retdict['props'] = data.get('properties')
+    retdict['req'] = []
+    return retdict
+
+def get_five_ui():
+    url = "https://new-etem-praev.bg-kooperation.de/anwendungen/5-sicherheitsregeln/elektrohandwerk/handwerk_test/ui-schema-view"
+    ui = requests.get(url, headers={'Accept': 'application/json'})
+    data = ui.json()
+    return data
+
 example_services = {'ella_simple_page': ServiceDescription(name = u"ella_simple_page",
                         title = u"Steckbrief France Gall",
                         description = u"Wichtige biografische Stationen der Sängerin France Gall",
@@ -69,13 +85,28 @@ example_services = {'ella_simple_page': ServiceDescription(name = u"ella_simple_
                             type = u"object",
                             properties = formfields,
                             required = reqfields),
-                            formactions = [ServiceButton(name=u"pdf", title=u"Drucken", cssclass=u"btn btn-primary",
+                        formactions = [ServiceButton(name=u"pdf", title=u"Drucken", cssclass=u"btn btn-primary",
                                                          method=u"POST")]),
                     'ella_simple_group': ServiceDescription(name = u"ella_simple_group",
                         title = u"VIP Services",
                         description = u"Gruppe mit VIP-Services",
                         type = u"group",
-                        services = [u"ella_simple_page", "ella_simple_group"])
+                        services = [u"ella_simple_page", "ella_simple_group"]),
+                    'five_rules' : ServiceDescription(name = u"five_rules",
+                        title = u"Elektrohandwerk",
+                        description = u"Arbeiten an Schaltanlagen in der Niederspannung, Trafostationen (unterspannungsseitig)",
+                        type = u"service",
+                        ui = get_five_ui(),
+                        form = FormDescription(name = u"S143",
+                            title=u"Arbeiten an Schaltanlagen in der Niederspannung, Trafostationen (unterspannungsseitig)",
+                            description=u"",
+                            type = u"object",
+                            properties = get_five()['props'],
+                            required = get_five()['req']),
+                            formactions = [ServiceButton(name=u"pdf", title=u"Drucken", cssclass=u"primary",
+                                                         method=u"POST"),
+                                           ServiceButton(name=u"save", title=u"Speichern", cssclass=u"secondary",
+                                                         method=u"GET")])
                   }
 
 example_apps = {'ella_example_simple': Welcome(name = u"ella_example_simple",
@@ -84,7 +115,8 @@ example_apps = {'ella_example_simple': Welcome(name = u"ella_example_simple",
                     bodytext = songtext,
                     services=[example_services['ella_simple_page'],
                              example_services['ella_simple_service'],
-                             example_services['ella_simple_group']
+                             example_services['ella_simple_group'],
+                             example_services['five_rules']
                             ],
                     impressum=u"Impressum",
                     privacy=u"Datenschutzerklärung",

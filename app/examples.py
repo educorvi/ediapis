@@ -3,7 +3,7 @@
 # # lars.walther@educorvi.de
 
 import requests
-from .models import Welcome, ServiceDescription, ServiceButton, FormDescription
+from .models import Welcome, ServiceDescription, ServiceButton, FormDescription, UISchema
 
 songtext = u"""\
 <h2>Strophe 1</h2>
@@ -60,7 +60,7 @@ def get_five():
     fiverules = requests.get(url, headers={'Accept': 'application/json'})
     data = fiverules.json()
     retdict = dict()
-    retdict['props'] = data.get('properties')
+    retdict['props'] = data
     retdict['req'] = []
     return retdict
 
@@ -96,17 +96,15 @@ example_services = {'ella_simple_page': ServiceDescription(name = u"ella_simple_
                         title = u"Elektrohandwerk",
                         description = u"Arbeiten an Schaltanlagen in der Niederspannung, Trafostationen (unterspannungsseitig)",
                         type = u"service",
-                        ui = get_five_ui(),
+                        ui = UISchema(type = "VerticalLayout", elements = get_five_ui()),
                         form = FormDescription(name = u"S143",
                             title=u"Arbeiten an Schaltanlagen in der Niederspannung, Trafostationen (unterspannungsseitig)",
                             description=u"",
                             type = u"object",
                             properties = get_five()['props'],
                             required = get_five()['req']),
-                            formactions = [ServiceButton(name=u"pdf", title=u"Drucken", cssclass=u"primary",
-                                                         method=u"POST"),
-                                           ServiceButton(name=u"save", title=u"Speichern", cssclass=u"secondary",
-                                                         method=u"GET")])
+                            formactions = [ServiceButton(name=u"pdf", title=u"Drucken", cssclass=u"info",
+                                                         method=u"POST")])
                   }
 
 example_apps = {'ella_example_simple': Welcome(name = u"ella_example_simple",

@@ -1,9 +1,16 @@
 # -*- coding: utf-8 -*-
-# # Copyright (c) 2016-2020 educorvi GmbH & Co. KG
+# # Copyright (c) 2016-2021 educorvi GmbH & Co. KG
 # # lars.walther@educorvi.de
 
 from typing import Optional, List, Dict, Text, Union
 from pydantic import BaseModel
+
+class UISchema(BaseModel):
+    type : str
+    elements : List[dict]
+
+class PDFData(BaseModel):
+    form : dict
 
 class FormDescription(BaseModel):
     """
@@ -74,7 +81,7 @@ class ServiceDescription(BaseModel):
     type: str #page, service, group
     text : Optional[Text]
     form : Optional[FormDescription]
-    ui : Optional[dict]
+    ui : Optional[UISchema]
     services : Optional[List[str]]
     formactions : Optional[List[ServiceButton]]
 

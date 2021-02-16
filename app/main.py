@@ -2,7 +2,7 @@
 # # Copyright (c) 2016-2020 educorvi GmbH & Co. KG
 # # lars.walther@educorvi.de
 
-from .models import Welcome, ServiceDescription, ServiceButton, FormDescription
+from .models import Welcome, ServiceDescription, ServiceButton, FormDescription, PDFData
 from .models import EllaContact, ContactResponse
 from .services import EllaServices
 from fastapi import FastAPI
@@ -43,7 +43,7 @@ def read_ella_service(ella_id:str, ella_service:str):
 
 
 @app.post("/{ella_id}/{ella_service}/pdf")
-def get_pdf(ella_id:str, data:FormDescription):
+def get_pdf(ella_id:str, ella_service:str, data:PDFData):
     """Die ella Applikation sendet die Daten passend zu einer Servicebeschreibung. Es wird ein
        PDF-Dokument zurückgesendet.
     """

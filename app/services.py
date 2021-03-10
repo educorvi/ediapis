@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # # Copyright (c) 2016-2020 educorvi GmbH & Co. KG
 # # lars.walther@educorvi.de
-
+import base64
 import sys
 import smtplib
 import requests
 from fastapi import HTTPException
 from .examples import example_apps, example_services
+from .models import ResponseData
 
 
 class EllaServices:
@@ -50,6 +51,34 @@ class EllaServices:
             except:
                 return  {'success':False, 'message': sys.exc_info()[0]}
         raise HTTPExeption(status_code=404, detail="ella_service not found or not allowed in this context")
+
+    def get_pdfexample(self, ella_id, ella_service, data):
+        if ella_id == 'ella_example_simple':
+            content = open('/tmp/elektrohandwerk-schaltanlagen.pdf', 'rb')
+            filedata = base64.b64encode(content.read())
+            return ResponseData(type = 'file',
+                content = filedata,
+                encoding = 'base64',
+                fileName = 'elektrohandwerk-s143.pdf',
+                mimeType = 'application/pdf')
+        else:
+            raise HTTPExeption(status_code=404, detail="ella_service not found or not allowed in this context")
+                    
+    def get_linkexample(self, ella_id, ella_service, data):
+        if ella_id == 'ella_example_simple':
+            return ResponseData(type = 'link',
+                content = 'mailto:subject=Beispiel-Fragebogen&body=http://www.bgetem.de',
+                encoding = 'utf-8')
+        else:
+            raise HTTPExeption(status_code=404, detail="ella_service not found or not allowed in this context")
+
+    def get_mailexample(self, ella_id, ella_service, data):
+        if ella_id == 'ella_example_simple':
+            return ResponseData(type = 'email',
+                content = 'https://www.bgetem.de',
+                encoding = 'utf-8')
+
+
 
     #Your service stuff after this line
     #----------------------------------

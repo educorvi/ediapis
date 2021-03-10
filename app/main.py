@@ -2,8 +2,8 @@
 # # Copyright (c) 2016-2020 educorvi GmbH & Co. KG
 # # lars.walther@educorvi.de
 
-from .models import Welcome, ServiceDescription, ServiceButton, FormDescription, PDFData
-from .models import EllaContact, ContactResponse
+from .models import Welcome, ServiceDescription, ServiceButton, FormDescription, FormData
+from .models import EllaContact, ContactResponse, ResponseData
 from .services import EllaServices
 from fastapi import FastAPI
 
@@ -42,12 +42,24 @@ def read_ella_service(ella_id:str, ella_service:str):
      return services.get_ella_service(ella_id, ella_service)
 
 
-@app.post("/{ella_id}/{ella_service}/pdf")
-def get_pdf(ella_id:str, ella_service:str, data:PDFData):
+@app.post("/{ella_id}/{ella_service}/pdf", response_model=ResponseData)
+def get_pdf(ella_id:str, ella_service:str, data:FormData):
     """Die ella Applikation sendet die Daten passend zu einer Servicebeschreibung. Es wird ein
        PDF-Dokument zurückgesendet.
     """
-    return {'pdf':'pdf'}
+    return services.get_pdfexample(ella_id, ella_service, data)
+
+@app.post("/{ella_id}/{ella_service}/mail", response_model=ResponseData)
+def get_pdf(ella_id:str, ella_service:str, data:FormData):
+    """Die ella Applikation sendet die Daten passend zu einer Servicebeschreibung.
+    """
+    return services.get_mailexample(ella_id, ella_service, data)
+
+@app.post("/{ella_id}/{ella_service}/link", response_model=ResponseData)
+def get_pdf(ella_id:str, ella_service:str, data:FormData):
+    """Die ella Applikation sendet die Daten passend zu einer Servicebeschreibung.
+    """
+    return services.get_linkexample(ella_id, ella_service, data)
 
 @app.post("/{ella_id}/contact/send", response_model=ContactResponse)
 def get_data(ella_id:str, data:EllaContact):

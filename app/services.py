@@ -8,14 +8,28 @@ import requests
 from fastapi import HTTPException
 from .examples import example_apps, example_services
 from .models import ResponseData
+from .converter import ellaview2welcome
+from .private import BASE_URL, USER, PW, APPS
 
+class EllaServices(object):
 
-class EllaServices:
+    def __init__(self):
+        session = requests.Session()
+        session.auth = (USER, PW)
+        session.headers.update({'Accept': 'application/json'})
+        self.session = session
 
     def get_welcome_page(self, ella_id:str):
         if ella_id == 'ella_example_simple':
             welcome = example_apps.get(ella_id)
             return welcome
+        elif ella_id in APPS:
+            url = APPS.get(ella_id) + '/ella-view'
+            rawwelcome = self.session.get(url)
+            rawwelcome = rawwelcome.json()
+            welcome = ellaview2welcome(rawwelcome)
+            return welcome
+
         #Your welcome-stuff after this line
         #----------------------------------
         #elif ella_id == 'your_ella_app_id':

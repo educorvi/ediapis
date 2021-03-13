@@ -1,20 +1,35 @@
 # -*- coding: utf-8 -*-
 # # Copyright (c) 2016-2020 educorvi GmbH & Co. KG
 # # lars.walther@educorvi.de
-
+import base64
 import sys
 import smtplib
 import requests
 from fastapi import HTTPException
 from .examples import example_apps, example_services
+from .models import ResponseData
+from .converter import ellaview2welcome
+from .private import BASE_URL, USER, PW, APPS
 
+class EllaServices(object):
 
-class EllaServices:
+    def __init__(self):
+        session = requests.Session()
+        session.auth = (USER, PW)
+        session.headers.update({'Accept': 'application/json'})
+        self.session = session
 
     def get_welcome_page(self, ella_id:str):
         if ella_id == 'ella_example_simple':
             welcome = example_apps.get(ella_id)
             return welcome
+        elif ella_id in APPS:
+            url = APPS.get(ella_id) + '/ella-view'
+            rawwelcome = self.session.get(url)
+            rawwelcome = rawwelcome.json()
+            welcome = ellaview2welcome(rawwelcome)
+            return welcome
+
         #Your welcome-stuff after this line
         #----------------------------------
         #elif ella_id == 'your_ella_app_id':
@@ -29,11 +44,10 @@ class EllaServices:
             allowed.append(i.name)
         if ella_service not in allowed:
             raise HTTPExeption(status_code=404, detail="ella_service not found or not allowed in this context")
-        if ella_service.startswith('ella_simple'):
-            if ella_service in example_services:
-                return example_services[ella_service]
-            else:
-                raise HTTPExeption(status_code=404, detail="ella_service not found")
+        if ella_service in example_services:
+            return example_services[ella_service]
+        else:
+            raise HTTPExeption(status_code=404, detail="ella_service not found")
 
     def send_contact_data(self, ella_id, data):
         if ella_id == 'ella_example_simple':
@@ -51,6 +65,34 @@ class EllaServices:
             except:
                 return  {'success':False, 'message': sys.exc_info()[0]}
         raise HTTPExeption(status_code=404, detail="ella_service not found or not allowed in this context")
+
+    def get_pdfexample(self, ella_id, ella_service, data):
+        if ella_id == 'ella_example_simple':
+            content = open('/tmp/elektrohandwerk-schaltanlagen.pdf', 'rb')
+            filedata = base64.b64encode(content.read())
+            return ResponseData(type = 'file',
+                content = filedata,
+                encoding = 'base64',
+                fileName = 'elektrohandwerk-s143.pdf',
+                mimeType = 'application/pdf')
+        else:
+            raise HTTPExeption(status_code=404, detail="ella_service not found or not allowed in this context")
+                    
+    def get_linkexample(self, ella_id, ella_service, data):
+        if ella_id == 'ella_example_simple':
+            return ResponseData(type = 'link',
+                content = 'mailto:subject=Beispiel-Fragebogen&body=http://www.bgetem.de',
+                encoding = 'utf-8')
+        else:
+            raise HTTPExeption(status_code=404, detail="ella_service not found or not allowed in this context")
+
+    def get_mailexample(self, ella_id, ella_service, data):
+        if ella_id == 'ella_example_simple':
+            return ResponseData(type = 'email',
+                content = 'https://www.bgetem.de',
+                encoding = 'utf-8')
+
+
 
     #Your service stuff after this line
     #----------------------------------

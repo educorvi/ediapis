@@ -71,11 +71,6 @@ example_services = {'ella_simple_page': ServiceDescription(name = u"ella_simple_
                             required = reqfields),
                             formactions = [ServiceButton(name=u"pdf", title=u"Drucken", cssclass=u"btn btn-primary",
                                                          method=u"POST")]),
-                    'ella_simple_group': ServiceDescription(name = u"ella_simple_group",
-                        title = u"VIP Services",
-                        description = u"Gruppe mit VIP-Services",
-                        type = u"group",
-                        services = [u"ella_simple_page", "ella_simple_group"])
                   }
 
 example_apps = {'ella_example_simple': Welcome(name = u"ella_example_simple",
@@ -84,9 +79,6 @@ example_apps = {'ella_example_simple': Welcome(name = u"ella_example_simple",
                     bodytext = songtext,
                     services=[example_services['ella_simple_page'],
                              example_services['ella_simple_service'],
-                             example_services['ella_simple_group']
-                            ],
-                    impressum=u"Impressum",
-                    privacy=u"Datenschutzerklärung",
-                    contact=u"Kontaktinformationen")
+                             ]
+                    )
                }

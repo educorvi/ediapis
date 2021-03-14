@@ -91,6 +91,7 @@ class ServiceButton(BaseModel):
     title: Text
     cssclass: str
     method: str
+    modaltext: Optional[Text]
     additional: Optional[dict]
 
 class GroupServiceDescription(BaseModel):

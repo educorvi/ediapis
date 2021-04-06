@@ -6,6 +6,7 @@ from .models import Welcome, ServiceDescription, ServiceButton, FormDescription,
 from .models import EllaContact, ContactResponse, ResponseData
 from .services import EllaServices
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 
 app = FastAPI(
     title="ELLA",
@@ -47,19 +48,30 @@ def get_pdf(ella_id:str, ella_service:str, data:FormData):
     """Die ella Applikation sendet die Daten passend zu einer Servicebeschreibung. Es wird ein
        PDF-Dokument zurückgesendet.
     """
-    return services.get_pdfexample(ella_id, ella_service, data)
+    return services.get_ellapdf(ella_id, ella_service, data)
+
 
 @app.post("/{ella_id}/{ella_service}/mail", response_model=ResponseData)
-def get_pdf(ella_id:str, ella_service:str, data:FormData):
+def get_mail(ella_id:str, ella_service:str, data:FormData):
     """Die ella Applikation sendet die Daten passend zu einer Servicebeschreibung.
     """
-    return services.get_mailexample(ella_id, ella_service, data)
+    return services.get_ellamail(ella_id, ella_service, data)
+
+
+@app.get("/{ella_id}/{ella_service}/docprinter/{docid}")
+def get_print(ella_id:str, ella_service:str, docid:str):
+    """Die ella Applikation sendet die Daten passend zu einer Servicebeschreibung.
+    """
+    printfile = services.get_ellaprint(ella_id, ella_service, docid)
+    return FileResponse(printfile.get('filedata'), filename=printfile.get('filename'), media_type="application/pdf")
+
 
 @app.post("/{ella_id}/{ella_service}/link", response_model=ResponseData)
-def get_pdf(ella_id:str, ella_service:str, data:FormData):
+def get_link(ella_id:str, ella_service:str, data:FormData):
     """Die ella Applikation sendet die Daten passend zu einer Servicebeschreibung.
     """
-    return services.get_linkexample(ella_id, ella_service, data)
+    return services.get_ellalink(ella_id, ella_service, data)
+
 
 @app.post("/{ella_id}/contact/send", response_model=ContactResponse)
 def get_data(ella_id:str, data:EllaContact):

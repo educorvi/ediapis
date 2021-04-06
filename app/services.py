@@ -10,6 +10,8 @@ from .examples import example_apps, example_services
 from .models import ResponseData
 from .converter import ellaview2welcome
 from .private import BASE_URL, USER, PW, APPS
+from printfiverules.pdfprinter import PdfPrinter
+from .persistance import writeDocToDatabase, readDocFromDatabase
 
 class EllaServices(object):
 
@@ -66,34 +68,48 @@ class EllaServices(object):
                 return  {'success':False, 'message': sys.exc_info()[0]}
         raise HTTPExeption(status_code=404, detail="ella_service not found or not allowed in this context")
 
-    def get_pdfexample(self, ella_id, ella_service, data):
-        if ella_id == 'ella_example_simple':
-            content = open('/tmp/elektrohandwerk-schaltanlagen.pdf', 'rb')
-            filedata = base64.b64encode(content.read())
-            return ResponseData(type = 'file',
+    def get_ellapdf(self, ella_id, ella_service, data):
+        ellaprinter = PdfPrinter()
+        pdfprint = getattr(ellaprinter, ella_service)
+        printdata = dict()
+        printdata['data'] = data.form
+        docid = writeDocToDatabase(data.form)
+        printdata['docid'] = docid
+        print(printdata)
+        pdfstring = pdfprint(printdata)
+        filepath = '/tmp/%s.pdf' % docid
+        content = open(filepath, 'rb')
+        filedata = base64.b64encode(content.read())
+        filename = '%s.pdf' % ella_service
+        return ResponseData(type = 'file',
                 content = filedata,
                 encoding = 'base64',
-                fileName = 'elektrohandwerk-s143.pdf',
+                filename = filename,
                 mimeType = 'application/pdf')
-        else:
-            raise HTTPExeption(status_code=404, detail="ella_service not found or not allowed in this context")
-                    
-    def get_linkexample(self, ella_id, ella_service, data):
+
+    def get_ellamail(self, ella_id, ella_service, data):
+        docid = writeDocToDatabase(data.form)
+        url = 'https://ella.uv-kooperation.de/%s/%s/docprinter/%s' % (ella_id, ella_service, docid)
+        return ResponseData(type = 'email',
+                content = url,
+                encoding = 'utf-8')
+
+    def get_ellaprint(self, ella_id, ella_service, doc_id):
+        ellaprinter = PdfPrinter()
+        pdfprint = getattr(ellaprinter, ella_service)
+        document = readDocFromDatabase(doc_id)
+        printdata = dict()
+        printdata['data'] = document
+        printdata['docid'] = doc_id
+        pdfstring = pdfprint(printdata)
+        filepath = '/tmp/%s.pdf' % doc_id
+        filename = '%s.pdf' % ella_service
+        return {'filedata':filepath, 'filename':filename}
+
+    def get_ellalink(self, ella_id, ella_service, data):
         if ella_id == 'ella_example_simple':
             return ResponseData(type = 'link',
                 content = 'mailto:subject=Beispiel-Fragebogen&body=http://www.bgetem.de',
                 encoding = 'utf-8')
         else:
-            raise HTTPExeption(status_code=404, detail="ella_service not found or not allowed in this context")
-
-    def get_mailexample(self, ella_id, ella_service, data):
-        if ella_id == 'ella_example_simple':
-            return ResponseData(type = 'email',
-                content = 'https://www.bgetem.de',
-                encoding = 'utf-8')
-
-
-
-    #Your service stuff after this line
-    #----------------------------------
-
+            raise HTTPException(status_code=404, detail="ella_service not found or not allowed in this context")        

@@ -24,6 +24,10 @@ def createServiceButtons(formactions):
                 method = button.get('method'))
         if button.get('additional'):
             ella_button.additional = button.get('additional')
+        if button.get('modaltitle'):
+            ella_button.modaltitle = button.get('modaltitle')
+        if button.get('modaltext'):
+            ella_button.modaltext = button.get('modaltext')
         ella_buttons.append(ella_button)
     return ella_buttons
 

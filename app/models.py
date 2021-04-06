@@ -85,12 +85,15 @@ class ServiceButton(BaseModel):
     - "method" = HTTP-Methode zum Aufruf des Service [GET, POST, PUT, REDIRECT]
         * HTTP-Methods GET, POST, PUT
         * REDIRECT-Method für "innerPWA" Aufrufe von Services über den Namen
+    - "modaltitle" = Titel des Modals mit Zusatzinformationen beim Aufruf des Buttons   
+    - "modaltext" = Text im Modal vor den Formularfeldern    
     - "additional" = Zusätzliches Modal-Feld mit Daten für den Serviceaufruf z.B. E-Mail-Adresse
     """
     name: str
     title: Text
     cssclass: str
     method: str
+    modaltitle : Optional[Text]
     modaltext: Optional[Text]
     additional: Optional[dict]
 

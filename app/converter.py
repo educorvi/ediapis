@@ -112,3 +112,13 @@ def ellaview2welcome(raw):
         services = ella_services
         )
     return ella_welcome
+
+def ellaserviceview2service(service):
+    typ = service.get('type')
+    if typ == 'group':
+        ella_service = createGroupService(service)
+    elif typ == 'service':
+        ella_service = createFormService(service)
+    elif typ == 'page':
+        ella_service = createPageService(service)
+    return ella_service

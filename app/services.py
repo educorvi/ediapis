@@ -8,7 +8,7 @@ import requests
 from fastapi import HTTPException
 from .examples import example_apps, example_services
 from .models import ResponseData
-from .converter import ellaview2welcome
+from .converter import ellaview2welcome, ellaserviceview2service
 from .private import BASE_URL, USER, PW, APPS
 from printfiverules.pdfprinter import PdfPrinter
 from .persistance import writeDocToDatabase, readDocFromDatabase
@@ -31,23 +31,24 @@ class EllaServices(object):
             rawwelcome = rawwelcome.json()
             welcome = ellaview2welcome(rawwelcome)
             return welcome
-
-        #Your welcome-stuff after this line
-        #----------------------------------
-        #elif ella_id == 'your_ella_app_id':
-        #   do something
         else:
             raise HTTPException(status_code=404, detail="ella_id couldn't be found")
 
     def get_ella_service(self, ella_id, ella_service):
-        welcome_page = self.get_welcome_page(ella_id)
-        allowed = []
-        for i in welcome_page.services:
-            allowed.append(i.name)
-        if ella_service not in allowed:
-            raise HTTPExeption(status_code=404, detail="ella_service not found or not allowed in this context")
-        if ella_service in example_services:
-            return example_services[ella_service]
+        if ella_id == 'ella_example_simple':
+            if ella_service in example_services:
+                return example_services[ella_service]
+            else:
+                raise HTTPExeption(status_code=404, detail="ella_service not found")
+        elif ella_id in APPS:
+            url = APPS.get(ella_id) + '/ella-service-view?ella_service=%s' % ella_service
+            rawservice = self.session.get(url)
+            rawservice = rawservice.json()
+            if rawservice:
+                service = ellaserviceview2service(rawservice)
+                return service
+            else:
+                raise HTTPExeption(status_code=404, detail="ella_service not found or not allowed in this context")
         else:
             raise HTTPExeption(status_code=404, detail="ella_service not found")
 
@@ -58,7 +59,6 @@ class EllaServices(object):
             msg['Subject'] = f'The contents of {textfile}'
             msg['From'] = data.email
             msg['To'] = "your.email@domain.de"
-            # Senden der Nachricht über einen SMTP-Server
             try:
                 s = smtplib.SMTP('localhost')
                 s.send_message(msg)

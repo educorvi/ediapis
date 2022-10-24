@@ -75,6 +75,29 @@ class FormDescription(BaseModel):
     properties : Dict[str, dict]
     required : List[str]
 
+class MediaFile(BaseModel):
+    """
+    """
+    name: Text
+    title: Text
+    description: Text
+    type: str #audio, video
+    url: str
+    transcript: Optional[Text]
+    imageurl : Optional[str]
+    imagecaption: Optional[str]
+
+class MediaContainer(BaseModel):
+    """
+    """
+    name : Text
+    title : Text
+    description: Text
+    type: str #audio, video
+    textbefore: Optional[Text]
+    textafter:Optional[Text]
+    mediafiles: Optional[List[MediaFile]]
+
 class ServiceButton(BaseModel):
     """
     Beschreibung eines Buttons für den ella_service
@@ -117,6 +140,7 @@ class GroupServiceDescription(BaseModel):
     type: str #page, service
     text : Optional[Text]
     form : Optional[FormDescription]
+    media : Optional[MediaContainer]
     ui : Optional[UISchema]
     formactions : Optional[List[ServiceButton]]
 
@@ -130,6 +154,8 @@ class ServiceDescription(BaseModel):
         * "page" = Es wird eine Seite angezeigt. Der Richtext der Seite steht im Attribut "text"
         * "service" = Es wird ein Formular angezeigt. Das JSON-Schema des Formulars steht im Attribut "form"
         * "group" = Es handelt sich um eine Gruppe von Services. Die Services stehen dann in "services"
+        * "audio" = Es handelt sich um einen Audio-Container
+        * "video" = Es handelt sich um einen Video-Container
     - "text" = optional (bei type=page): <HTML> Richtext der Seite
     - "form" = optional (bei type=form): JSON-Schema der Form
     - "ui" = optional (bei type=form): UI-Schema der Form
@@ -139,11 +165,12 @@ class ServiceDescription(BaseModel):
     name : Text
     title : Text
     description : Text
-    type: str #page, service, group
+    type: str #page, service, group, audio, video
     text : Optional[Text]
     form : Optional[FormDescription]
     ui : Optional[UISchema]
     services : Optional[List[GroupServiceDescription]]
+    media: Optional[MediaContainer]
     formactions : Optional[List[ServiceButton]]
 
 class Welcome(BaseModel):

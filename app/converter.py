@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # # Copyright (c) 2016-2020 educorvi GmbH & Co. KG
 # # lars.walther@educorvi.de
-from .models import Welcome, ServiceDescription, GroupServiceDescription, FormDescription, UISchema, ServiceButton
+from collections import namedtuple
+from .models import Welcome, ServiceDescription, GroupServiceDescription, FormDescription, UISchema, ServiceButton, MediaContainer, MediaFile
+from .examples import example_services, frau, mann
 
 def createForm(form):
     ella_form = FormDescription(
@@ -75,6 +77,16 @@ def createGroupPageService(service):
             )
     return ella_service   
 
+def createGroupMediaService(service):
+    ella_service = ServiceDescription(
+            name = service.get('name'),
+            title = service.get('title'),
+            description = service.get('description'),
+            type = 'media',
+            media = createMediaContainer(service),
+            )
+    return ella_service
+
 def createGroupService(service):
     ella_subservices = list()
     subservices = service.get('services')
@@ -82,6 +94,8 @@ def createGroupService(service):
         typ = subservice.get('type')
         if typ == 'service':
             ella_subservices.append(createGroupFormService(subservice))
+        elif typ in ['audio', 'video']:
+            ella_subservices.append(createGroupMediaService(subservice))
         else:
             ella_subservices.append(createGroupPageService(subservice))
     ella_service = ServiceDescription(
@@ -90,6 +104,49 @@ def createGroupService(service):
             description = service.get('description'),
             type = 'group',
             services = ella_subservices
+            )
+    return ella_service
+
+def createMediaFiles(files):
+    ella_mediafiles = list()
+    for mediafile in files:
+        transcript = ''
+        if mediafile.get('transcript'):
+            if mediafile.get('mimetype') == 'audio/mpeg':
+                transcript = mediafile.get('transcript').replace('\r\n', '\n')
+        ella_mediafile = MediaFile(
+                name = mediafile.get('name'),
+                title = mediafile.get('title'),
+                description = mediafile.get('description'),
+                url = mediafile.get('url'),
+                mimetype = mediafile.get('mimetype'),
+                transcript = transcript,
+                imageurl = mediafile.get('imageurl'),
+                imagecaption = mediafile.get('imagecaption')
+                )
+        ella_mediafiles.append(ella_mediafile)
+    return ella_mediafiles
+
+def createMediaContainer(service):
+    files = service.get('mediafiles')
+    ella_mediafiles = createMediaFiles(files)
+    media_container = MediaContainer(
+            name = service.get('name'),
+            title = service.get('title'),
+            description = service.get('description'),
+            type = service.get('type'),
+            textbefore = service.get('textbefore'),
+            textafter = service.get('textafter'),
+            mediafiles = ella_mediafiles)
+    return media_container
+
+def createMediaService(service):
+    ella_service = ServiceDescription(
+            name = service.get('name'),
+            title = service.get('title'),
+            description = service.get('description'),
+            type = 'media',
+            media = createMediaContainer(service)
             )
     return ella_service
 
@@ -104,6 +161,8 @@ def ellaview2welcome(raw):
             ella_services.append(createFormService(service))
         elif typ == 'page':
             ella_services.append(createPageService(service))
+        elif typ in ['audio', 'video']:
+            ella_services.append(createMediaService(service))
     ella_welcome = Welcome(
         name = raw.get('name'),
         title = raw.get('title'),

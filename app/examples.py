@@ -3,6 +3,7 @@
 # # lars.walther@educorvi.de
 
 from .models import Welcome, ServiceDescription, ServiceButton, FormDescription, MediaContainer, MediaFile
+from .transscripte import anchorxtrans
 
 transcription = """\
 1
@@ -389,21 +390,50 @@ mann = MediaFile(
         name='kurzpause_maennlich',
         title='KurzPause starten (Anleitung mit männlicher Stimme)',
         description='Mein Test 1',
-        type='audio',
         url='https://new-etem-praev.bg-kooperation.de/anwendungen/kurzpausen/entspannung/relax/kurzpause-starten-anleitung-mit-maennlicher-stimme/@@download/audio/Kurzpausen+BG+_+Wolf+_+Relax.mp3',
+        mimetype='audio/mpeg',
         transcript='',
-        imageurl='https://new-etem-praev.bg-kooperation.de/anwendungen/kurzpausen/entspannung/relax/kurzpause-starten-anleitung-mit-maennlicher-stimme/@@images/image/large',
-        imagecaption='Mann mit Gitarre geht auf einem Feld spazieren.')
+        imageurl='',
+        imagecaption='')
 
 frau = MediaFile(
         name='kurzpause_weiblich',
         title='KurzPause starten (Anleitung mit weiblicher Stimme)',
         description='Mein Test 1',
-        type='audio',
         url='https://new-etem-praev.bg-kooperation.de/anwendungen/kurzpausen/entspannung/relax/kurzpause-starten-anleitung-mit-weiblicher-stimme/@@download/audio/Kurzpausen+BG+_+Nollau+_+Relax.mp3',
+        mimetype='audio/mpeg',
         transcript=transcription,
-        imageurl='https://new-etem-praev.bg-kooperation.de/anwendungen/kurzpausen/entspannung/relax/kurzpause-starten-anleitung-mit-weiblicher-stimme/@@images/image/large',
-        imagecaption='Frau in Yoga-Haltung im Sonnenuntergang')
+        imageurl='',
+        imagecaption='')
+
+donau = MediaFile(
+        name='donau',
+        title='Impressionen der Donau am Abend',
+        description='Mein Test 1',
+        url='https://new-etem-praev.bg-kooperation.de/anwendungen/kurzpausen/videos/das-ist-ein-test-von-video-dateien/die-donau/@@download/video/Donau+-+32308.mp4',
+        mimetype='video/mp4',
+        transcript='',
+        imageurl='https://new-etem-praev.bg-kooperation.de/anwendungen/kurzpausen/videos/das-ist-ein-test-von-video-dateien/die-donau/@@images/image/large',
+        imagecaption='Die Donau bei Budapest')
+
+anchorx = MediaFile(
+        name='anchorx',
+        title='Teamgespraech AnchorX',
+        description='Mein Test 2',
+        url='https://new-etem-praev.bg-kooperation.de/anwendungen/kurzpausen/videos/das-ist-ein-test-von-video-dateien/anchorx-vorstellung/@@download/video/anchorX_Teamgespraech.mp4',
+        mimetype='video/mp4',
+        transcript=anchorxtrans,
+        imageurl='',
+        imagecaption='')
+
+videotest = MediaContainer(
+        name='videotest',
+        title='Videobeispiele',
+        description='Das Beispiel zeigt 2 Videos mit Vorschaubild und ohne sowie mit Transscription und ohne Transscription',
+        type='video',
+        textbefore="Das ist der Text vor den Videos",
+        textafter="Das ist der Text nach den Videos",
+        mediafiles=[donau, anchorx])
 
 relax = MediaContainer(
         name='relax',
@@ -446,7 +476,7 @@ Beispiele für bewusste KurzPausen mit der Übung Relax!</p>
 <li>"KurzPausen" und weitere Werkzeuge zum Präventionsschwerpunkt "Führung - Kommunikation - Verhalten" finden Sie auf der <a target="_blank" href="https://www.bgetem.de/arbeitssicherheit-gesundheitsschutz/praeventionskampagnen/kommmitmensch" rel="noopener" title="Link zur Internetseite ser BG ETEM." data-linktype="external" data-val="https://www.bgetem.de/arbeitssicherheit-gesundheitsschutz/praeventionskampagnen/kommmitmensch">Internetseite der BG ETEM</a>.</li>
 </ul>
 """,
-        mediafiles=[frau,mann])
+        mediafiles=[mann, frau])
 
 formfields = {u'vorname':{u'description':u'Dein Vorname', u'type':u'string'},
               u'name':{u'description':u'Dein Name', u'type':'string'},
@@ -477,8 +507,13 @@ example_services = {'ella_simple_page': ServiceDescription(name = u"ella_simple_
                     'ella_audio_service': ServiceDescription(name= u"ella_audio_service",
                         title = u"Relax!",
                         description = u"Einzelübung / ca. 3 Minuten / Entspannungsübung mit Aktivität",
-                        type="audio",
+                        type="media",
                         media=relax),
+                    'ella_video_service': ServiceDescription(name="ella_video_service",
+                        title = u"Videotest",
+                        description = u"Videodateien mit unterschiedlichen Ausprägungen",
+                        type="media",
+                        media=videotest)
                   }
 
 example_apps = {'ella_example_simple': Welcome(name = u"ella_example_simple",
@@ -488,6 +523,7 @@ example_apps = {'ella_example_simple': Welcome(name = u"ella_example_simple",
                     services=[example_services['ella_simple_page'],
                              example_services['ella_simple_service'],
                              example_services['ella_audio_service'],
+                             example_services['ella_video_service'],
                              ]
                     )
                }

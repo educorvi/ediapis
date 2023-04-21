@@ -22,6 +22,7 @@ class EllaServices(object):
         self.session = session
 
     def get_welcome_page(self, ella_id:str):
+        print('hier')
         if ella_id == 'ella_example_simple':
             welcome = example_apps.get(ella_id)
             return welcome

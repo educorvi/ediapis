@@ -3,7 +3,7 @@
 # # lars.walther@educorvi.de
 from collections import namedtuple
 from .models import Welcome, ServiceDescription, GroupServiceDescription, FormDescription, UISchema, ServiceButton, MediaContainer, MediaFile
-from .examples import example_services, frau, mann
+from .examples import example_services
 
 def createForm(form):
     ella_form = FormDescription(

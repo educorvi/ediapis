@@ -22,7 +22,6 @@ class EllaServices(object):
         self.session = session
 
     def get_welcome_page(self, ella_id:str):
-        print('hier')
         if ella_id == 'ella_example_simple':
             welcome = example_apps.get(ella_id)
             return welcome
@@ -37,6 +36,7 @@ class EllaServices(object):
         #----------------------------------
         #elif ella_id == 'your_ella_app_id':
         #   do something
+
         else:
             raise HTTPException(status_code=404, detail="ella_id couldn't be found")
 
@@ -76,7 +76,6 @@ class EllaServices(object):
         printdata['data'] = data.form
         docid = writeDocToDatabase(data.form)
         printdata['docid'] = docid
-        print(printdata)
         pdfstring = pdfprint(printdata)
         filepath = '/tmp/%s.pdf' % docid
         content = open(filepath, 'rb')

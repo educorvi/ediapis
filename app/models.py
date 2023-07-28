@@ -155,6 +155,7 @@ class ServiceDescription(BaseModel):
         * "service" = Es wird ein Formular angezeigt. Das JSON-Schema des Formulars steht im Attribut "form"
         * "group" = Es handelt sich um eine Gruppe von Services. Die Services stehen dann in "services"
         * "media" = Es handelt sich um einen Media-Container
+    - "hidden" = optionale Angabe ob der Service im Menü ausgeblendet werden soll. Default: False     
     - "text" = optional (bei type=page): <HTML> Richtext der Seite
     - "form" = optional (bei type=form): JSON-Schema der Form
     - "ui" = optional (bei type=form): UI-Schema der Form
@@ -165,6 +166,7 @@ class ServiceDescription(BaseModel):
     title : Text
     description : Text
     type: str #page, service, group, media
+    hidden : Optional[bool] = False
     text : Optional[Text]
     form : Optional[FormDescription]
     ui : Optional[UISchema]

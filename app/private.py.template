@@ -1,0 +1,9 @@
+USER = 'ploneuser'
+PW = 'plonesecret'
+
+APPS = {
+        'appname':'https://myserver.com/path/path/appname',
+        }
+
+MONGOUSR = 'mongouser'
+MONGOPW = 'mongosecret'

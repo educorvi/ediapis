@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 # # Copyright (c) 2016-2020 educorvi GmbH & Co. KG
 # # lars.walther@educorvi.de
+import json
 from collections import namedtuple
 from .models import Welcome, ServiceDescription, GroupServiceDescription, FormDescription, UISchema, ServiceButton, MediaContainer, MediaFile
 from .examples import example_services
 
 def createForm(form):
+    tst_name = 'test'
+    tst_description = 'testdescription'
     ella_form = FormDescription(
-            name = form.get('name'),
+            name = tst_name,
             title = form.get('title'),
-            description = form.get('description'),
+            description = tst_description,
             type = 'object',
             properties = form.get('properties'),
             required = form.get('required'),
@@ -34,13 +37,15 @@ def createServiceButtons(formactions):
     return ella_buttons
 
 def createFormService(service):
+    form = json.loads(service.get('form'))
+    ui = json.loads(service.get('ui'))
     ella_service = ServiceDescription(
             name = service.get('name'),
             title = service.get('title'),
             description = service.get('description'),
             type = 'service',
-            form = createForm(service.get('form')),
-            ui = UISchema(type = "VerticalLayout", elements = service.get('ui')),
+            form = createForm(form),
+            ui = ui,
             formactions = createServiceButtons(service.get('formactions'))
             )
     return ella_service
@@ -78,7 +83,7 @@ def createGroupPageService(service):
     return ella_service   
 
 def createGroupMediaService(service):
-    ella_service = ServiceDescription(
+    ella_service = GroupServiceDescription(
             name = service.get('name'),
             title = service.get('title'),
             description = service.get('description'),

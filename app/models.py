@@ -31,8 +31,8 @@ class ResponseData(BaseModel):
     type : str
     content : Text
     encoding : str
-    fileName : Optional[str]
-    mimeType : Optional[str]
+    fileName : Optional[str] = None
+    mimeType : Optional[str] = None
 
 class FormData(BaseModel):
     """
@@ -42,7 +42,7 @@ class FormData(BaseModel):
     - "additional" = Zusätzliche Daten für den Service im Backend (z.B. E-Mail-Adresse)
     """
     form : dict
-    additional: Optional[dict]
+    additional: Optional[dict] = None
 
 class FormDescription(BaseModel):
     """
@@ -80,23 +80,23 @@ class MediaFile(BaseModel):
     """
     name: Text
     title: Text
-    description: Optional[Text]
+    description: Optional[Text] = None
     url: str
     mimetype: str #audio/mpeg, video/mp4
-    transcript: Optional[Text]
-    imageurl : Optional[str]
-    imagecaption: Optional[str]
+    transcript: Optional[Text] = None
+    imageurl : Optional[str] = None
+    imagecaption: Optional[str] = None
 
 class MediaContainer(BaseModel):
     """
     """
     name : Text
     title : Text
-    description: Optional[Text]
+    description: Optional[Text] = None
     type: str #audio, video
-    textbefore: Optional[Text]
-    textafter:Optional[Text]
-    mediafiles: Optional[List[MediaFile]]
+    textbefore: Optional[Text] = None
+    textafter:Optional[Text] = None
+    mediafiles: Optional[List[MediaFile]] = None
 
 class ServiceButton(BaseModel):
     """
@@ -116,9 +116,9 @@ class ServiceButton(BaseModel):
     title: Text
     cssclass: str
     method: str
-    modaltitle : Optional[Text]
-    modaltext: Optional[Text]
-    additional: Optional[dict]
+    modaltitle : Optional[Text] = None
+    modaltext: Optional[Text] = None
+    additional: Optional[dict] = None
 
 class GroupServiceDescription(BaseModel):
     """
@@ -138,11 +138,11 @@ class GroupServiceDescription(BaseModel):
     title : Text
     description : Text
     type: str #page, service
-    text : Optional[Text]
-    form : Optional[FormDescription]
-    media : Optional[MediaContainer]
-    ui : Optional[UISchema]
-    formactions : Optional[List[ServiceButton]]
+    text : Optional[Text] = None
+    form : Optional[FormDescription] = None
+    media : Optional[MediaContainer] = None
+    ui : Optional[UISchema] = None
+    formactions : Optional[List[ServiceButton]] = None
 
 class ServiceDescription(BaseModel):
     """
@@ -167,12 +167,13 @@ class ServiceDescription(BaseModel):
     description : Text
     type: str #page, service, group, media
     hidden : Optional[bool] = False
-    text : Optional[Text]
-    form : Optional[FormDescription]
-    ui : Optional[UISchema]
-    services : Optional[List[GroupServiceDescription]]
-    media: Optional[MediaContainer]
-    formactions : Optional[List[ServiceButton]]
+    text : Optional[Text] = None
+    form : Optional[FormDescription] = None
+    #ui : Optional[UISchema] = None
+    ui: Optional[dict] = None
+    services : Optional[List[GroupServiceDescription]] = None
+    media: Optional[MediaContainer] = None
+    formactions : Optional[List[ServiceButton]] = None
 
 class Welcome(BaseModel):
     """
@@ -189,8 +190,8 @@ class Welcome(BaseModel):
     title : Text
     description : Text
     bodytext : Text
-    services : Optional[List[ServiceDescription]]
-    formactions : Optional[List[ServiceButton]]
+    services : Optional[List[ServiceDescription]] = None
+    formactions : Optional[List[ServiceButton]] = None
 
 class EllaContact(BaseModel):
     """
@@ -201,8 +202,8 @@ class EllaContact(BaseModel):
     subject : Text
     message : Text
     email : Text
-    telefon : Optional[Text]
-    mobil : Optional[Text]
+    telefon : Optional[Text] = None
+    mobil : Optional[Text] = None
 
 class ContactResponse(BaseModel):
     """

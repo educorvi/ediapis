@@ -39,6 +39,7 @@ def createFormService(service):
             title = service.get('title'),
             description = service.get('description'),
             type = 'service',
+            hidden = service.get('hidden', False),
             form = createForm(service.get('form')),
             ui = UISchema(type = "VerticalLayout", elements = service.get('ui')),
             formactions = createServiceButtons(service.get('formactions'))
@@ -51,6 +52,7 @@ def createPageService(service):
             title = service.get('title'),
             description = service.get('description'),
             type = 'page',
+            hidden = service.get('hidden', False),
             text = service.get('text')
             )
     return ella_service
@@ -61,6 +63,7 @@ def createGroupFormService(service):
             title = service.get('title'),
             description = service.get('description'),
             type = 'service',
+            hidden = service.get('hidden', False),
             form = createForm(service.get('form')),
             ui = UISchema(type = "VerticalLayout", elements = service.get('ui')),
             formactions = createServiceButtons(service.get('formactions'))
@@ -73,6 +76,7 @@ def createGroupPageService(service):
             title = service.get('title'),
             description = service.get('description'),
             type = 'page',
+            hidden = service.get('hidden', False),
             text = service.get('text')
             )
     return ella_service   
@@ -83,6 +87,7 @@ def createGroupMediaService(service):
             title = service.get('title'),
             description = service.get('description'),
             type = 'media',
+            hidden = service.get('hidden', False),
             media = createMediaContainer(service),
             )
     return ella_service

@@ -11,6 +11,8 @@ from .models import ResponseData
 from .converter import ellaview2welcome
 from .private import BASE_URL, USER, PW, APPS
 from printfiverules.pdfprinter import PdfPrinter
+from pwaprint.createpdf import create_pdf
+from pwaprint.dataparser import parse_data_from_dicts
 from .persistance import writeDocToDatabase, readDocFromDatabase
 
 class EllaServices(object):
@@ -70,22 +72,28 @@ class EllaServices(object):
         raise HTTPExeption(status_code=404, detail="ella_service not found or not allowed in this context")
 
     def get_ellapdf(self, ella_id, ella_service, data):
-        ellaprinter = PdfPrinter()
-        pdfprint = getattr(ellaprinter, ella_service)
-        printdata = dict()
-        printdata['data'] = data.form
+        service = None
+        welcome = self.get_welcome_page(ella_id)
+        for i in welcome.services:
+            if i.name == ella_service:
+                service = i
+                break
+        if not service:
+            raise
+        formdict = service.form.__dict__
+        uidict = service.ui.__dict__
+        formdata = parse_data_from_dicts(uidict, formdict, data.form)
         docid = writeDocToDatabase(data.form)
-        printdata['docid'] = docid
-        pdfstring = pdfprint(printdata)
         filepath = '/tmp/%s.pdf' % docid
+        create_pdf(filepath, formdata)
         content = open(filepath, 'rb')
         filedata = base64.b64encode(content.read())
         filename = '%s.pdf' % ella_service
         return ResponseData(type = 'file',
-                content = filedata,
-                encoding = 'base64',
-                filename = filename,
-                mimeType = 'application/pdf')
+                            content = filedata,
+                            encoding = 'base64',
+                            filename = filename,
+                            mimeType = 'application/pdf')
 
     def get_ellamail(self, ella_id, ella_service, data):
         docid = writeDocToDatabase(data.form)

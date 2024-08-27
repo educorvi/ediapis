@@ -28,13 +28,17 @@ oder zum Empfang bzw.zur Auswertung der Daten und Informationen. Beispiele sind:
 - die Branchensoftware des Service-Anbieters
 - ein CRM-System
 
+Die folgende Abbildung zeigt eine mögliche Gesamtkonfiguration einer ELLA-App mit allen momentan bekannten Komponenten:
+
+![ELLA-Komponenten](./doc/images/ella_komponenten.png "Ella-Komponenten")
+
 Was ELLA ist
 ------------
 
 ELLA ist die Komponente zwischen den beiden Welten. Die Aufgabe von ELLA besteht darin, die verschiedenen internen Schnittstellen zu
 kapseln und nach aussen OpenApi-Kontrakte anzubieten wie die folgende Abbildung zeigt:
 
-![ELLA-Konfiguration](./doc/images/ella_konfig.jpg "Ella-Konfiguration")
+![ELLA-Konfiguration](./doc/images/ella_konfig.png "Ella-Konfiguration")
 
 - ELLA ist die praktische Anwendung des OpenApi Standards für "Fire and Forget" Applikationen
 - ELLA ist eine Sammlung von Klassendefinitionen und Funktionen, die eine Realisierung solcher Anwendungen erleichtern sollen
@@ -85,7 +89,7 @@ die auf den folgenden Prinzipien beruht:
 
 Die folgende Abbildung zeigt den Aufbau einer "Fire and Forget" Applikation auf Basis des ELLA OpenApi-Kontrakts.
 
-![Aufbau einer Fire and Forget Applikation](./doc/images/ella_template.jpg "Aufbau einer Fire an Forget Applikation")
+![Aufbau einer Fire and Forget Applikation](./doc/images/ella_template.png "Aufbau einer Fire an Forget Applikation")
 
 #### Aufbau von ELLA auf dem Filesystem
 
